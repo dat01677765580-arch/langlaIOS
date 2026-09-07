@@ -1,1 +1,5 @@
-include 'android', 'ios', 'core'
+// Uncomment the next line to build Android
+// include 'android', 'ios', 'core'
+
+// For iOS-only build (Codemagic):
+include 'ios', 'core'
