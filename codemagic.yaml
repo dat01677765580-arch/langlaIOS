@@ -1,18 +1,25 @@
 workflows:
   ios-workflow:
     name: iOS Build (RoboVM)
-    max_build_duration: 120
+    max_build_duration: 180
     environment:
       groups:
         - codemagic_secrets
       vars:
         APP_ID: "com.beatdz.langlalau"
+    artifacts:
+      - ios/build/**/*.ipa
+      - ios/build/**/*.app
     scripts:
-      - name: List available tasks
+      - name: List RoboVM tasks
         script: |
           chmod +x gradlew
-          ./gradlew :ios:tasks --all | head -50
-      - name: Build iOS
+          ./gradlew :ios:tasks --all 2>&1 | grep -i "robovm\|ios\|simulator\|device\|ipa"
+      - name: Build iOS with RoboVM
         script: |
           chmod +x gradlew
           ./gradlew :ios:build
+      - name: Generate native iOS
+        script: |
+          chmod +x gradlew
+          ./gradlew :ios:robovmCompile
