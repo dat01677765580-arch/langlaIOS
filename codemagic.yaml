@@ -11,11 +11,9 @@ workflows:
       - name: Use Gradle 7.6.4
         script: |
           sed -i '' 's/gradle-8.7-bin.zip/gradle-7.6.4-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
-      - name: List ALL tasks (with plugins)
+      - name: Build iOS IPA
         script: |
           chmod +x gradlew
-          ./gradlew :ios:tasks --all 2>&1
-      - name: Build iOS app
-        script: |
-          chmod +x gradlew
-          ./gradlew :ios:assemble :ios:jar 2>&1 | tail -50
+          ./gradlew :ios:createIPA
+    artifacts:
+      - ios/build/**/*.ipa
