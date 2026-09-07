@@ -1,7 +1,7 @@
 workflows:
   ios-workflow:
     name: iOS Build (RoboVM)
-    max_build_duration: 180
+    max_build_duration: 120
     environment:
       groups:
         - codemagic_secrets
