@@ -1,14 +1,14 @@
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\Admin\\Desktop\\mykeystore.jks')
+            // Keystore removed - will be configured in CI/CD
+            storeFile null
             storePassword '12345678'
             keyAlias 'myalias'
             keyPassword '12345678'
         }
     }
     namespace "com.mygdx.game"
-    buildToolsVersion "34.0.0"
     compileSdkVersion 34
     sourceSets {
         main {
@@ -33,6 +33,9 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

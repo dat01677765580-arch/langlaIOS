@@ -13,16 +13,11 @@ workflows:
       - ios/build/output/**/*.ipa
       - ios/build/reports/*.xml
     scripts:
-      - name: Set up code signing
-        script: |
-          keychain initialize
-          app-store-connect fetch-signing-files "$APP_ID" --type IOS_APP_STORE
-          xcode-project use-profiles
-      - name: Build iOS with Gradle
+      - name: Build iOS with RoboVM
         script: |
           chmod +x gradlew
-          ./gradlew :ios:build
-      - name: Build xcode
+          ./gradlew :ios:compileGdxSources
+      - name: Build xcode project
         script: |
           cd ios
           xcodebuild build \
