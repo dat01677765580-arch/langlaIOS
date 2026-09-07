@@ -1,6 +1,6 @@
 workflows:
   ios-workflow:
-    name: iOS Build (RoboVM)
+    name: iOS Build
     max_build_duration: 120
     environment:
       groups:
@@ -8,16 +8,16 @@ workflows:
       vars:
         APP_ID: "com.beatdz.langlalau"
     scripts:
-      - name: Downgrade Gradle to 6.9.4 for RoboVM
+      - name: Restore Gradle version
         script: |
-          chmod +x gradlew
-          sed -i '' 's/gradle-8.7-bin.zip/gradle-6.9.4-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
+          # Use default Gradle 8.7
+          sed -i '' 's/gradle-6.9.4-bin.zip/gradle-8.7-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
           cat gradle/wrapper/gradle-wrapper.properties
-      - name: Build iOS
+      - name: Build core module
         script: |
           chmod +x gradlew
-          ./gradlew :ios:tasks --all 2>&1 | head -100
-      - name: Generate iOS
+          ./gradlew :core:build --info 2>&1 | tail -30
+      - name: Build iOS module
         script: |
           chmod +x gradlew
-          ./gradlew :ios:xcode createIPA
+          ./gradlew :ios:assemble --info 2>&1 | tail -30
