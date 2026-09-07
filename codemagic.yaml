@@ -16,7 +16,7 @@ workflows:
       - name: Build iOS with RoboVM
         script: |
           chmod +x gradlew
-          ./gradlew :ios:compileGdxSources
+          ./gradlew :ios:build
       - name: Build xcode project
         script: |
           cd ios
