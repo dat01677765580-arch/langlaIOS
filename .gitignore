@@ -101,6 +101,11 @@ gradle-app.setting
 /html/build/
 /ios/build/
 
+## Keep gradlew files (needed for build)
+/gradlew
+/gradlew.bat
+!/gradle/wrapper/
+
 ## OS Specific
 .DS_Store
 Thumbs.db
