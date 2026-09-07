@@ -8,13 +8,16 @@ workflows:
       vars:
         APP_ID: "com.beatdz.langlalau"
     scripts:
-      - name: Downgrade Gradle for RoboVM
+      - name: Downgrade Gradle to 6.9.4 for RoboVM
         script: |
           chmod +x gradlew
-          # Use Gradle 7.6.4 which is compatible with RoboVM
-          sed -i '' 's/gradle-8.7-bin.zip/gradle-7.6.4-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
+          sed -i '' 's/gradle-8.7-bin.zip/gradle-6.9.4-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
           cat gradle/wrapper/gradle-wrapper.properties
       - name: Build iOS
         script: |
           chmod +x gradlew
-          ./gradlew :ios:build --info 2>&1 | tail -50
+          ./gradlew :ios:tasks --all 2>&1 | head -100
+      - name: Generate iOS
+        script: |
+          chmod +x gradlew
+          ./gradlew :ios:xcode createIPA
