@@ -8,16 +8,11 @@ workflows:
       vars:
         APP_ID: "com.beatdz.langlalau"
     scripts:
-      - name: Restore Gradle version
+      - name: Use Gradle 7.6.4
         script: |
-          # Use default Gradle 8.7
-          sed -i '' 's/gradle-6.9.4-bin.zip/gradle-8.7-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
+          sed -i '' 's/gradle-8.7-bin.zip/gradle-7.6.4-bin.zip/g' gradle/wrapper/gradle-wrapper.properties
           cat gradle/wrapper/gradle-wrapper.properties
-      - name: Build core module
+      - name: Build iOS
         script: |
           chmod +x gradlew
-          ./gradlew :core:build --info 2>&1 | tail -30
-      - name: Build iOS module
-        script: |
-          chmod +x gradlew
-          ./gradlew :ios:assemble --info 2>&1 | tail -30
+          ./gradlew :ios:tasks --all 2>&1 | head -50
