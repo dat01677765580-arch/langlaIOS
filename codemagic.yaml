@@ -6,24 +6,30 @@ workflows:
       groups:
         - codemagic_secrets
       vars:
-        XCODE_WORKSPACE: "ios/TheGioiNhanGia.xcworkspace"
         XCODE_SCHEME: "TheGioiNhanGia"
         APP_ID: "com.beatdz.langlalau"
     artifacts:
-      - ios/build/output/**/*.ipa
+      - ios/xcode/build/**/*.ipa
       - ios/build/reports/*.xml
     scripts:
-      - name: Build iOS with RoboVM
+      - name: Setup and build iOS with RoboVM
         script: |
           chmod +x gradlew
+          # Generate Xcode project from RoboVM
+          ./gradlew :ios:xcode
+          # Build iOS
           ./gradlew :ios:build
-      - name: Build xcode project
+      - name: Package IPA
         script: |
-          cd ios
+          cd ios/xcode
+          # Find the .xcworkspace
+          WORKSPACE=$(find . -name "*.xcworkspace" -type d | head -1)
+          SCHEME=$(ls -la *.xcworkspace 2>/dev/null | grep -o 'TheGioiNhanGia' | head -1 || echo "TheGioiNhanGia")
           xcodebuild build \
-            -workspace "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
+            -workspace "$WORKSPACE" \
+            -scheme TheGioiNhanGia \
             -configuration Release \
+            -destination 'generic/platform=iOS' \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
