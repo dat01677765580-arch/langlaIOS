@@ -1,0 +1,35 @@
+workflows:
+  ios-workflow:
+    name: iOS Build
+    max_build_duration: 60
+    environment:
+      groups:
+        - codemagic_secrets
+      vars:
+        XCODE_WORKSPACE: "ios/TheGioiNhanGia.xcworkspace"
+        XCODE_SCHEME: "TheGioiNhanGia"
+        APP_ID: "com.beatdz.langlalau"
+    artifacts:
+      - ios/build/output/**/*.ipa
+      - ios/build/reports/*.xml
+    scripts:
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$APP_ID" --type IOS_APP_STORE
+          xcode-project use-profiles
+      - name: Build iOS
+        script: |
+          cd ios
+          ./gradlew build
+      - name: Build IPA
+        script: |
+          cd ios
+          xcodebuild build \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
