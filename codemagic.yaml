@@ -1,35 +1,17 @@
 workflows:
   ios-workflow:
-    name: iOS Build
-    max_build_duration: 60
+    name: iOS Build (RoboVM)
+    max_build_duration: 120
     environment:
       groups:
         - codemagic_secrets
       vars:
-        XCODE_SCHEME: "TheGioiNhanGia"
         APP_ID: "com.beatdz.langlalau"
-    artifacts:
-      - ios/xcode/build/**/*.ipa
-      - ios/build/reports/*.xml
     scripts:
-      - name: Setup and build iOS with RoboVM
+      - name: Build iOS with RoboVM
         script: |
           chmod +x gradlew
-          # Generate Xcode project from RoboVM
-          ./gradlew :ios:xcode
-          # Build iOS
-          ./gradlew :ios:build
-      - name: Package IPA
-        script: |
-          cd ios/xcode
-          # Find the .xcworkspace
-          WORKSPACE=$(find . -name "*.xcworkspace" -type d | head -1)
-          SCHEME=$(ls -la *.xcworkspace 2>/dev/null | grep -o 'TheGioiNhanGia' | head -1 || echo "TheGioiNhanGia")
-          xcodebuild build \
-            -workspace "$WORKSPACE" \
-            -scheme TheGioiNhanGia \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+          # Run all tasks including xcode project generation
+          ./gradlew :ios:xcode :ios:build
+          # List what was created
+          find . -name "*.xcode*" -o -name "*.xcworkspace" -o -name "*.app" -o -name "*.ipa" 2>/dev/null | head -20
