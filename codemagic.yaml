@@ -8,10 +8,11 @@ workflows:
       vars:
         APP_ID: "com.beatdz.langlalau"
     scripts:
-      - name: Build iOS with RoboVM
+      - name: List available tasks
         script: |
           chmod +x gradlew
-          # Run all tasks including xcode project generation
-          ./gradlew :ios:xcode :ios:build
-          # List what was created
-          find . -name "*.xcode*" -o -name "*.xcworkspace" -o -name "*.app" -o -name "*.ipa" 2>/dev/null | head -20
+          ./gradlew :ios:tasks --all | head -50
+      - name: Build iOS
+        script: |
+          chmod +x gradlew
+          ./gradlew :ios:build
